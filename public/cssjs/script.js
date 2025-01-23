@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.add("hidden");
         document.querySelector("header").classList.remove("hidden")
         document.querySelector(".selain3d").classList.remove("hidden")
+        document.querySelector(".typing").classList.remove("hidden")
 
         // Kirim event custom dengan data
         const event = new CustomEvent('tombolDitekan', { detail: { tombolditekan: true } });
@@ -19,6 +20,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+//typing
+var TxtType = function(el, toRotate, period) {
+    this.toRotate = toRotate;
+    this.el = el;
+    this.loopNum = 0;
+    this.period = parseInt(period, 10) || 2000;
+    this.txt = '';
+    this.isDeleting = false;
+    this.scrollHandler = this.handleScroll.bind(this);
+    window.addEventListener('scroll', this.scrollHandler);
+};
+
+TxtType.prototype.handleScroll = function() {
+    const bodyHeight = document.body.scrollHeight;
+    const scrollPosition = window.scrollY + window.innerHeight;
+    const scrollPercent = (scrollPosition / bodyHeight) * 100;
+
+    if (scrollPercent >= 1 && scrollPercent < 50) {
+        this.updateText(Math.floor((scrollPercent - 25) / 25 * this.toRotate[0].length));
+    } else if (scrollPercent >= 50) {
+        this.txt = this.toRotate[0]; // Tampilkan teks penuh
+        this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+    } else {
+        this.txt = ''; // Kosongkan teks jika scroll di bawah 0%
+        this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+    }
+};
+
+TxtType.prototype.updateText = function(length) {
+    this.txt = this.toRotate[0].substring(0, length);
+    this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+};
+
+window.onload = function() {
+    var elements = document.getElementsByClassName('typewrite');
+    for (var i = 0; i < elements.length; i++) {
+        var toRotate = elements[i].getAttribute('data-type');
+        var period = elements[i].getAttribute('data-period');
+        if (toRotate) {
+            new TxtType(elements[i], JSON.parse(toRotate), period);
+        }
+    }
+    var css = document.createElement("style");
+    css.type = "text/css";
+    css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+    document.body.appendChild(css);
+};
+
+
+
+
+
+//banner
 const banners = document.querySelectorAll('.banner');
 
 banners.forEach((banner) => {

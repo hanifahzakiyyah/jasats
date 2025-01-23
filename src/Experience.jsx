@@ -13,6 +13,7 @@ export default function Experience() {
     const {camera} = useThree()
     const [targetPosition, setTargetPosition] = useState([-5, 7, 20]);
     const cameraRef = useRef();
+    const [aturPosisi, setAturPosisi] = useState(false)
 
     //tombol login untuk orbit
     useEffect(() => {
@@ -20,6 +21,10 @@ export default function Experience() {
             console.log(event.detail.tombolditekan); // Output: true
             setShowOrbCont(false);
             setTargetPosition([5, 7, 20]); // Set target position
+            setAturPosisi(true)
+            setTimeout(()=>{
+                setAturPosisi(false)
+            }, 1000)
         };
 
         // Tambahkan event listener
@@ -32,7 +37,7 @@ export default function Experience() {
     }, []);
 
     useFrame(() => {
-        if (camera) {
+        if (camera && aturPosisi) {
             // Lerp camera position
             camera.position.lerp(new THREE.Vector3(...targetPosition), 0.1);
         }
