@@ -7,18 +7,23 @@ import { DirectionalLightHelper, AxesHelper } from 'three'
 export default function Experience() {
     const light1Ref = useRef()
     const light2Ref = useRef()
-    const [showOrbCont, setShowOrbCont] = useState(false)
+    const [showOrbCont, setShowOrbCont] = useState(true)
 
-
-    //pengaturan orbit control
-    useEffect(()=>{
-        const elemen = document.getElementById("root")
-        if (elemen?.classList.contains("page-index")) {
-            setShowOrbCont(true)
-        } else{
+    //tombol login untuk orbit
+    useEffect(() => {
+        const handleEvent = (event) => {
+            console.log(event.detail.tombolditekan); // Output: true
             setShowOrbCont(false)
-        }
-    }, [])
+        };
+
+        // Tambahkan event listener
+        window.addEventListener('tombolDitekan', handleEvent);
+
+        return () => {
+            // Bersihkan event listener saat komponen unmount
+            window.removeEventListener('tombolDitekan', handleEvent);
+        };
+    }, []);
 
     // Menggunakan helper untuk directionalLight
     // useHelper(light1Ref, DirectionalLightHelper, 1)

@@ -28,7 +28,7 @@ function ResponsiveCanvas() {
                 fov: 45,
                 near: 0.1,
                 far: 200,
-                position: camera, // Posisi kamera responsif
+                position: camera, 
             }}
         >
             <Experience />
@@ -38,7 +38,6 @@ function ResponsiveCanvas() {
 
 const root = ReactDOM.createRoot(document.querySelector('#root'));
 
-// Render hanya sekali
 root.render(
     <ResponsiveCanvas />
 );

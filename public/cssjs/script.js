@@ -1,3 +1,26 @@
+//afterLogin
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("loaded")
+    const button = document.getElementById('manivestBtn');
+    
+    button.addEventListener('click', () => {
+        console.log("add")
+        document.body.classList.add('afterLogin');
+        button.classList.add("hidden");
+        document.querySelector("header").classList.remove("hidden")
+
+        // Kirim event custom dengan data
+        const event = new CustomEvent('tombolDitekan', { detail: { tombolditekan: true } });
+        window.dispatchEvent(event);
+    });
+});
+
+
+
+
+
+
 //swiperjs
 var swiper = new Swiper("#swiperPertama", {
   effect: "coverflow",

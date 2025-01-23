@@ -2,9 +2,6 @@
     font-family: 'neonFont';
     src: url('../font/neonFont.otf') format('opentype');
 }
-
-
-
 * {
     box-sizing: border-box;
 }
@@ -13,6 +10,10 @@ body{
 }
 .banner, #swiperPertama, #cards {
     overflow: hidden;
+}
+
+.hidden{
+    display: none !important;
 }
 
 
@@ -53,6 +54,7 @@ body{
 .login.after img{
     width: 30px;
 }
+
 
 
 .selain3d{
