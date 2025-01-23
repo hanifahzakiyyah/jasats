@@ -21,78 +21,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-const slider = document.querySelector('.slider');
-const quantity = parseInt(getComputedStyle(slider).getPropertyValue('--quantity'));
-let currentRotation = 0;
+const banners = document.querySelectorAll('.banner');
 
-document.getElementById('prev').addEventListener('click', () => {
+banners.forEach((banner) => {
+  const slider = banner.querySelector('.slider');
+  const quantity = parseInt(getComputedStyle(slider).getPropertyValue('--quantity'));
+  let currentRotation = 0;
+
+  const prevButton = banner.querySelector('.control-prev');
+  const nextButton = banner.querySelector('.control-next');
+  const popup = banner.querySelector('.popup');
+  const popupImage = banner.querySelector('.popup-image');
+  const closePopup = banner.querySelector('.popup-close');
+  const items = banner.querySelectorAll('.item');
+
+  // Update rotation
+  function updateRotation() {
+    slider.style.transform = `perspective(1000px) rotateX(-10deg) rotateY(${currentRotation}deg)`;
+  }
+
+  // Event listener for navigation
+  prevButton.addEventListener('click', () => {
     currentRotation += 360 / quantity;
     updateRotation();
-});
+  });
 
-document.getElementById('next').addEventListener('click', () => {
+  nextButton.addEventListener('click', () => {
     currentRotation -= 360 / quantity;
     updateRotation();
-});
+  });
 
-function updateRotation() {
-    slider.style.transform = `perspective(1000px) rotateX(-10deg) rotateY(${currentRotation}deg)`;
-}
-
-const items = document.querySelectorAll('.slider .item');
-const popup = document.getElementById('popup');
-const popupImage = document.getElementById('popupImage');
-const closePopup = document.getElementById('closePopup');
-
-items.forEach(item => {
+  // Event listener for items
+  items.forEach((item) => {
     item.addEventListener('click', () => {
-        const img = item.querySelector('img');
-        popupImage.src = img.src;
-        popup.style.display = 'block';
+      const img = item.querySelector('img');
+      popupImage.src = img.src;
+      popup.style.display = 'block';
     });
-});
+  });
 
-closePopup.addEventListener('click', () => {
+  // Event listener for closing popup
+  closePopup.addEventListener('click', () => {
     popup.style.display = 'none';
-});
+  });
 
+  // Swipe functionality
+  let startX;
 
-
-let startX;
-
-const banner = document.querySelector('.banner');
-
-// Event listener untuk touchstart
-banner.addEventListener('touchstart', (e) => {
-    // Menyimpan posisi sentuhan awal
+  banner.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
-}, { passive: false });
+  }, { passive: false });
 
-// Event listener untuk touchmove
-banner.addEventListener('touchmove', (e) => {
+  banner.addEventListener('touchmove', (e) => {
     const moveX = e.touches[0].clientX;
     const diff = startX - moveX;
 
-    // Ambang batas untuk mendeteksi swipe horizontal
     if (Math.abs(diff) > 10) {
-        e.preventDefault(); // Mencegah navigasi default saat gesture horizontal terdeteksi
+      e.preventDefault();
     }
-}, { passive: false });
+  }, { passive: false });
 
-// Event listener untuk touchend
-banner.addEventListener('touchend', (e) => {
+  banner.addEventListener('touchend', (e) => {
     const endX = e.changedTouches[0].clientX;
     const diff = startX - endX;
 
-    // Ambang batas 50px untuk mendeteksi swipe
     if (Math.abs(diff) > 50) {
-        if (diff > 0) {
-            // Swipe kiri, jalankan tombol Next
-            document.getElementById('next').click();
-        } else {
-            // Swipe kanan, jalankan tombol Prev
-            document.getElementById('prev').click();
-        }
+      if (diff > 0) {
+        nextButton.click();
+      } else {
+        prevButton.click();
+      }
     }
-}, { passive: false });
-
+  }, { passive: false });
+});

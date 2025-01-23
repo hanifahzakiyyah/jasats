@@ -97,7 +97,7 @@ export default function BoxBaru(props) {
     
         //opacity
         if (scrollPercent > 30 && scrollPercent <= 60) {
-          const normalizedPercent = (scrollPercent - 30) / 70 // 40%-70% -> 0-1
+          const normalizedPercent = (scrollPercent - 30) / (60 - 30) // 40%-70% -> 0-1
           setOpacityVal(1 - normalizedPercent) // Opacity dari 1 ke 0
         } else if (scrollPercent <= 30) {
           setOpacityVal(1) // Reset ke 1 sebelum rentang
