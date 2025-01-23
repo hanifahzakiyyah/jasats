@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
 const banners = document.querySelectorAll('.banner');
 
 banners.forEach((banner) => {
@@ -51,18 +49,44 @@ banners.forEach((banner) => {
     updateRotation();
   });
 
+  // Function to close popup
+function closePopupHandler() {
+    popup.classList.add('closing'); // Tambahkan kelas untuk memicu animasi close
+
+    // Tunggu sampai animasi selesai sebelum menyembunyikan elemen
+    popup.addEventListener('animationend', () => {
+        popup.style.display = 'none'; // Sembunyikan popup setelah animasi selesai
+        popup.classList.remove('closing'); // Hapus kelas closing untuk penggunaan berikutnya
+        document.body.style.overflow = ''; // Re-enable scrolling
+    }, { once: true }); // Pastikan listener hanya dipanggil sekali
+}
+
+
   // Event listener for items
   items.forEach((item) => {
     item.addEventListener('click', () => {
       const img = item.querySelector('img');
       popupImage.src = img.src;
       popup.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Disable scrolling
     });
   });
 
-  // Event listener for closing popup
-  closePopup.addEventListener('click', () => {
-    popup.style.display = 'none';
+  // Event listener for closing popup (close button)
+  closePopup.addEventListener('click', closePopupHandler);
+
+  // Close popup if user clicks outside the popup content
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      closePopupHandler();
+    }
+  });
+
+  // Close popup on scroll
+  window.addEventListener('scroll', () => {
+    if (popup.style.display === 'block') {
+      closePopupHandler();
+    }
   });
 
   // Swipe functionality

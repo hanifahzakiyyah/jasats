@@ -3,20 +3,23 @@ import BoxBaru from './BoxBaru'
 import { useEffect, useRef, useState } from 'react'
 import { useHelper } from '@react-three/drei'
 import { DirectionalLightHelper, AxesHelper } from 'three'
-import {useThree} from '@react-three/fiber'
+import {useFrame, useThree} from '@react-three/fiber'
+import * as THREE from 'three'
 
 export default function Experience() {
     const light1Ref = useRef()
     const light2Ref = useRef()
     const [showOrbCont, setShowOrbCont] = useState(true)
     const {camera} = useThree()
+    const [targetPosition, setTargetPosition] = useState([-5, 7, 20]);
+    const cameraRef = useRef();
 
     //tombol login untuk orbit
     useEffect(() => {
         const handleEvent = (event) => {
             console.log(event.detail.tombolditekan); // Output: true
-            setShowOrbCont(false)
-            camera.position.set(-5, 7, 20)
+            setShowOrbCont(false);
+            setTargetPosition([5, 7, 20]); // Set target position
         };
 
         // Tambahkan event listener
@@ -27,6 +30,13 @@ export default function Experience() {
             window.removeEventListener('tombolDitekan', handleEvent);
         };
     }, []);
+
+    useFrame(() => {
+        if (camera) {
+            // Lerp camera position
+            camera.position.lerp(new THREE.Vector3(...targetPosition), 0.1);
+        }
+    });
 
     // Menggunakan helper untuk directionalLight
     // useHelper(light1Ref, DirectionalLightHelper, 1)
