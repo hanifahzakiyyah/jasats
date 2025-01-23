@@ -43,11 +43,11 @@ body.afterLogin #root {
 @keyframes slidein {
     0%,
     100% {
-      background-position: 20% 0%;
+      background-position: 40% 0%;
       background-size: 2000px;
     }
     50% {
-      background-position: 100% 0%;
+      background-position: 80% 0%;
       background-size: 2500px;
     }
 }

@@ -75,14 +75,19 @@ body{
     width: 30px;
 }
 
-.typing{
+.typing {
     position: fixed;
     z-index: 3;
-    top: 47vh;
-    font-size: 2rem;
-    color: aliceblue;
+    top: 65vh; /* Posisi awal */
+    font-size: 1.5rem;
     text-align: center;
-    text-shadow: 1px 1px 10px #ffbae1;
+    font-family: "Aldrich", serif;
+    width: 400px;
+}
+.typing a{
+    color: #ffe9ff !important;
+    text-shadow: 1px 1px 12px #ffd7ffd4,
+    1px 1px 12px #ffd7ffd4;
 }
 
 

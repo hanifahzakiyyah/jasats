@@ -18,7 +18,6 @@ export default function Experience() {
     //tombol login untuk orbit
     useEffect(() => {
         const handleEvent = (event) => {
-            console.log(event.detail.tombolditekan); // Output: true
             setShowOrbCont(false);
             setTargetPosition([5, 7, 20]); // Set target position
             setAturPosisi(true)

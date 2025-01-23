@@ -1,11 +1,9 @@
 //afterLogin
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("loaded")
     const button = document.getElementById('manivestBtn');
     
     button.addEventListener('click', () => {
-        console.log("add")
         document.body.classList.add('afterLogin');
         button.classList.add("hidden");
         document.querySelector("header").classList.remove("hidden")
@@ -45,6 +43,14 @@ TxtType.prototype.handleScroll = function() {
     } else {
         this.txt = ''; // Kosongkan teks jika scroll di bawah 0%
         this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+    }
+
+    const typingElement = document.querySelector(".typing");
+    if (scrollPercent >= 65) {
+        const newYPosition =-6.5 * scrollPercent + 487.5;  
+        typingElement.style.top = newYPosition + 'vh'; 
+    } else {
+        typingElement.style.top = '65vh'; 
     }
 };
 
