@@ -1,31 +1,30 @@
 html,
-body
-{
+body {
     height: 100vh;
-}
-body #root
-{
-    height: 80vh;
-    width: 100%;
-    /* height: 100%; */
-    background: rgba(204, 204, 19, 0);
+    /* overflow: hidden; Mencegah scroll jika belum login */
 }
 
-
-body.afterLogin{
-    min-height: 500vh; 
-    /* background-color: #ea0d0d; */
-}
-body.afterLogin #root
-{
-    position: fixed;
+body #root {
+    position: fixed; /* Membuat elemen tetap berada di satu posisi */
     top: 0;
-    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(204, 204, 19, 0); /* Menjadikan elemen ini sebagai background */
+    z-index: 1;
+}
+
+body.afterLogin {
+    min-height: 500vh; /* Mengizinkan scroll ketika class .afterLogin ditambahkan */
+    overflow-y: scroll; /* Mengaktifkan scroll */
+}
+
+body.afterLogin #root {
+    position: fixed; /* Tetap fixed, tetap menjadi background */
+    top: 0;
     left: 0;
     right: 0;
     height: 100vh;
-    background: rgba(204, 204, 19, 0);
+    background: rgba(204, 204, 19, 0); /* Sama seperti kondisi sebelumnya */
+    z-index: -1; /* Tetap di belakang elemen lainnya */
 }
-
-
-

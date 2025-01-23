@@ -10,7 +10,7 @@ function ResponsiveCanvas() {
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth <= 768) {
-                setCamera([-5, 7, 16]); //mobile
+                setCamera([-5, 7, 20]); //mobile
             } else {
                 setCamera([-5, 5, 16]);
             }

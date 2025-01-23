@@ -188,7 +188,7 @@ h6 {
 }
 
 .scrolled .header {
-  box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0 18px #ffbaba1d;
 }
 
 /* Index Page Header

@@ -3,17 +3,20 @@ import BoxBaru from './BoxBaru'
 import { useEffect, useRef, useState } from 'react'
 import { useHelper } from '@react-three/drei'
 import { DirectionalLightHelper, AxesHelper } from 'three'
+import {useThree} from '@react-three/fiber'
 
 export default function Experience() {
     const light1Ref = useRef()
     const light2Ref = useRef()
     const [showOrbCont, setShowOrbCont] = useState(true)
+    const {camera} = useThree()
 
     //tombol login untuk orbit
     useEffect(() => {
         const handleEvent = (event) => {
             console.log(event.detail.tombolditekan); // Output: true
             setShowOrbCont(false)
+            camera.position.set(-5, 7, 20)
         };
 
         // Tambahkan event listener
@@ -106,6 +109,8 @@ export default function Experience() {
                 size={20}
                 scale={[30,30,30]}
                 count={250}
+                position={[0,1,0]}
+                color={"#ffbaba"}
             />
         </>
     )
