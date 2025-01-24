@@ -12,7 +12,7 @@ body #root {
     height: 100vh;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.078);
-    background: url(https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/8727c9b1-be21-4932-a221-4257b59a74dd);
+    background: url("./img/bg.jpg");
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background-repeat: no-repeat;
@@ -31,7 +31,7 @@ body.afterLogin #root {
     left: 0;
     right: 0;
     height: 100vh;
-    background: url(https://github.com/ecemgo/mini-samples-great-tricks/assets/13468728/8727c9b1-be21-4932-a221-4257b59a74dd);
+    background: url("./img/bg.jpg");
     z-index: -1; /* Tetap di belakang elemen lainnya */
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -43,11 +43,11 @@ body.afterLogin #root {
 @keyframes slidein {
     0%,
     100% {
-      background-position: 40% 0%;
+      background-position: 40% 15%;
       background-size: 2400px;
     }
     50% {
-      background-position: 80% 0%;
+      background-position: 80% 30%;
       background-size: 3200px;
     }
 }
