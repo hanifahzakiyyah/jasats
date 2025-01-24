@@ -472,6 +472,7 @@ h6 {
 /* CUSTOM CSS */
 @font-face {
   font-family: 'neonFont';
+  font-size: medium;
   src: url('../font/neonFont.otf') format('opentype');}
 
 .hidden{
