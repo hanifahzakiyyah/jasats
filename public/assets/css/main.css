@@ -472,7 +472,6 @@ h6 {
 /* CUSTOM CSS */
 @font-face {
   font-family: 'neonFont';
-  font-size: medium;
   src: url('../font/neonFont.otf') format('opentype');}
 
 .hidden{
@@ -542,7 +541,7 @@ h6 {
   position: fixed;
   z-index: 3;
   top: 65vh; /* Posisi awal */
-  font-size: 1.5rem;
+  font-size: 1rem;
   text-align: center;
   font-family: "Aldrich", serif;
   width: 400px;
