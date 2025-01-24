@@ -1,53 +1,28 @@
 html,
 body {
     height: 100vh;
-    /* overflow: hidden; Mencegah scroll jika belum login */
 }
 
 body #root {
-    position: fixed; /* Membuat elemen tetap berada di satu posisi */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.078);
-    /* background: url("./img/bg.jpg");
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background-repeat: no-repeat;
-    background-position: center top;  */
-    /* animation: slidein 120s forwards infinite alternate; */
+    background: radial-gradient(circle, rgb(89, 63, 63) 0%, rgb(0, 0, 0) 70%);
 }
 
 body.afterLogin {
-    min-height: 500vh; /* Mengizinkan scroll ketika class .afterLogin ditambahkan */
-    overflow-y: scroll; /* Mengaktifkan scroll */
+    min-height: 500vh; 
+    overflow-y: scroll;
 }
 
 body.afterLogin #root {
-    position: fixed; /* Tetap fixed, tetap menjadi background */
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 100vh;
-    /* background: url("./img/bg.jpg");
-    z-index: -1; 
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background-repeat: no-repeat;
-    background-position: center top; 
-    animation: slidein 120s forwards infinite alternate; */
-}
-
-@keyframes slidein {
-    0%,
-    100% {
-      background-position: 40% 15%;
-      background-size: 2400px;
-    }
-    50% {
-      background-position: 80% 30%;
-      background-size: 3200px;
-    }
+     background: radial-gradient(circle, rgb(89, 63, 63) 0%, rgb(0, 0, 0) 70%);
 }
