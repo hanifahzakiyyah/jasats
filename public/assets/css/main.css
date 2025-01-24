@@ -582,9 +582,9 @@ h6 {
 
 .banner .slider {
   position: absolute;
-  width: 200px;
+  width: 250px;
   height: 250px;
-  top: 10%;
+  top: 30%;
   left: calc(50% - 100px);
   transform-style: preserve-3d;
   transform: perspective(1000px) rotateX(-10deg) rotateY(0deg);
@@ -602,7 +602,7 @@ h6 {
 }
 .banner .slider .item img {
   width: 80%;
-  height: 80%;
+  height: 60%;
   object-fit: cover;
   -webkit-box-reflect: below -5px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
 }
