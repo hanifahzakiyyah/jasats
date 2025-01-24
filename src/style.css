@@ -44,10 +44,10 @@ body.afterLogin #root {
     0%,
     100% {
       background-position: 40% 0%;
-      background-size: 2000px;
+      background-size: 2400px;
     }
     50% {
       background-position: 80% 0%;
-      background-size: 2500px;
+      background-size: 3200px;
     }
 }

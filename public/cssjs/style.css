@@ -83,6 +83,7 @@ body{
     text-align: center;
     font-family: "Aldrich", serif;
     width: 400px;
+    opacity: 1;
 }
 .typing a{
     color: #ffe9ff !important;

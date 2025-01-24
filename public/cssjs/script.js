@@ -19,6 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 //typing
+
+function createLinearFunction(x1, y1, x2, y2) {
+  const m = (y2 - y1) / (x2 - x1); // Gradien
+  const c = y1 - m * x1; // Konstanta
+  return function (x) {
+      return m * x + c; // Fungsi linear
+  };
+}
+
+
 var TxtType = function(el, toRotate, period) {
     this.toRotate = toRotate;
     this.el = el;
@@ -45,13 +55,22 @@ TxtType.prototype.handleScroll = function() {
         this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
     }
 
+    const calculateY = createLinearFunction(60, 65, 75, -10);
+
     const typingElement = document.querySelector(".typing");
-    if (scrollPercent >= 65) {
-        const newYPosition =-6.5 * scrollPercent + 487.5;  
-        typingElement.style.top = newYPosition + 'vh'; 
+    if (scrollPercent >= 60 && scrollPercent <= 75) {
+      // Persamaan linear: y = -13/3 * scrollPercent + 325
+      const newYPosition = calculateY(scrollPercent)
+      typingElement.style.top = `${newYPosition}vh`;  
+      typingElement.style.opacity = 1
+      console.log(`scroll = ${scrollPercent} posisi y = ${newYPosition || 'fixed at 65vh'}`);
+    } else if (scrollPercent > 75) {
+        typingElement.style.top = '0vh'; // Setelah scroll 75%
+        typingElement.style.opacity = 0
     } else {
-        typingElement.style.top = '65vh'; 
+        typingElement.style.top = '65vh'; // Sebelum scroll 60%
     }
+
 };
 
 TxtType.prototype.updateText = function(length) {
