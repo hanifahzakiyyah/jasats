@@ -12,12 +12,12 @@ body #root {
     height: 100vh;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.078);
-    background: url("./img/bg.jpg");
+    /* background: url("./img/bg.jpg");
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background-repeat: no-repeat;
-    background-position: center top; 
-    animation: slidein 120s forwards infinite alternate;
+    background-position: center top;  */
+    /* animation: slidein 120s forwards infinite alternate; */
 }
 
 body.afterLogin {
@@ -31,13 +31,13 @@ body.afterLogin #root {
     left: 0;
     right: 0;
     height: 100vh;
-    background: url("./img/bg.jpg");
-    z-index: -1; /* Tetap di belakang elemen lainnya */
+    /* background: url("./img/bg.jpg");
+    z-index: -1; 
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background-repeat: no-repeat;
     background-position: center top; 
-    animation: slidein 120s forwards infinite alternate;
+    animation: slidein 120s forwards infinite alternate; */
 }
 
 @keyframes slidein {
