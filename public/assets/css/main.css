@@ -497,7 +497,7 @@ h6 {
   height: 50px; */
   /* background-color: #baddff; */
   color: #ffffff;
-  border-radius: 25px;
+  border-radius: 10px;
   box-shadow: 20px 0px 20px #ffbae139,
       -20px -0px 20px #ffbae139, 
       0px -20px 20px #ffbae139, 
@@ -515,23 +515,27 @@ h6 {
 
 .login div.btn:hover{
   background-color: #372c34;
-  color: #868686;
+  color: #7738be;
   box-shadow: 5px 5px 5px #0c0a0c,
       -5px -5px 5px #372c34;
 }
 .login div.btn:active{
-  background-color: #372c34;
-  color: #868686;
+  background-color: #c6baaaff;
+  color: #c6baaaff;
   box-shadow: 5px 5px 5px #0c0a0c,
       -5px -5px 5px #372c34;
 }
 .login div.btn div{
-  color: #ffe6f5;
-  font-family: "neonFont";
-  text-shadow: 20px 20px 20px #badcff1b,
-      -20px -20px 20px #badcff1b, 
-      20px -20px 20px #badcff1b, 
-      -20px 20px 20px #badcff1b;
+  color: #c6baaaff;
+  text-size-adjust: 120%;
+  text-rendering: auto;
+  -ms-text-kashida-space: var(--background-color);
+  text
+  /* font-family: "neonFont"; */
+  text-shadow: 20px 20px 20px #c6baaaff,
+      -20px -20px 20px #d6c9b7, 
+      20px -20px 20px #f1ede7, 
+      -20px 20px 20px #b6ab9d;
 }
 .login.after img{
   width: 30px;

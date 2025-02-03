@@ -124,7 +124,7 @@ export default function Experience() {
                 scale={[30,30,30]}
                 count={250}
                 position={[0,1,0]}
-                color={"#ffbaba"}
+                color={"#c6baaa"}
             />
         </>
     )
