@@ -6,7 +6,7 @@ import { DirectionalLightHelper, AxesHelper } from 'three'
 import {useFrame, useThree} from '@react-three/fiber'
 import * as THREE from 'three'
 
-const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
+const SparkConnections = ({ sparkCount = 300, maxDistance = 2.47104 }) => {
     const lineRef = useRef()
     const sparklesRef = useRef([])
     const connectionsRef = useRef([])
@@ -14,6 +14,8 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
     const updateTimeRef = useRef(0)
     const touchPointRef = useRef(null)
     const touchRadiusRef = useRef(10)
+    const clickPointRef = useRef(null)
+    const attractionStrengthRef = useRef(0)
 
     useEffect(() => {
         const radius = 25
@@ -28,11 +30,13 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
                 r * Math.cos(phi)
             )
 
+            const originalPosition = position.clone()
             const distFromCenter = position.distanceTo(new THREE.Vector3(0, 1, 0))
             const centerWeight = 1 - (distFromCenter / (radius * 1.5))
 
             return {
                 position,
+                originalPosition,
                 startTime: Math.random() * Math.PI * 2,
                 speed: Math.random() * 0.5 + 0.5,
                 connectionCount: 0,
@@ -60,14 +64,28 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
             touchPointRef.current = null
         }
 
+        const handleClick = (event) => {
+            const canvas = event.target
+            const rect = canvas.getBoundingClientRect()
+            const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
+            const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
+
+            const vector = new THREE.Vector3(x, y, 0.5)
+            vector.unproject(window.camera)
+            clickPointRef.current = vector
+            attractionStrengthRef.current = 1
+        }
+
         window.addEventListener('pointermove', handlePointerMove)
         window.addEventListener('pointerup', handlePointerUp)
+        window.addEventListener('click', handleClick)
 
         setInitialized(true)
 
         return () => {
             window.removeEventListener('pointermove', handlePointerMove)
             window.removeEventListener('pointerup', handlePointerUp)
+            window.removeEventListener('click', handleClick)
         }
     }, [])
 
@@ -82,7 +100,7 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
                 if (i < j && otherSparkle.connectionCount < 3) {
                     const distance = sparkle.position.distanceTo(otherSparkle.position)
                     if (distance < maxDistance) {
-                        let connectionProb = baseConnectionProb * 
+                        let connectionProb = baseConnectionProb *
                             (sparkle.centerWeight + otherSparkle.centerWeight) / 2
 
                         if (touchPointRef.current) {
@@ -123,9 +141,34 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
 
     useFrame(({ clock }) => {
         if (!lineRef.current || !initialized) return
-        
+
         const time = clock.getElapsedTime() * 1000
         const now = time
+
+        // Update sparkle positions
+        if (clickPointRef.current && attractionStrengthRef.current > 0) {
+            sparklesRef.current.forEach(sparkle => {
+                // Calculate direction to click point
+                const toClick = clickPointRef.current.clone().sub(sparkle.position)
+                const dist = toClick.length()
+
+                // Normalize and scale by strength (slower movement)
+                toClick.normalize().multiplyScalar(0.005 * attractionStrengthRef.current)
+
+                // Limit movement based on distance to original position
+                const toOriginal = sparkle.originalPosition.clone().sub(sparkle.position)
+                const origDist = toOriginal.length()
+                if (origDist > 5) {
+                    toOriginal.normalize().multiplyScalar(0.01)
+                    sparkle.position.add(toOriginal)
+                } else {
+                    sparkle.position.add(toClick)
+                }
+            })
+
+            // Very slowly decrease attraction
+            attractionStrengthRef.current *= 0.998
+        }
 
         if (now - updateTimeRef.current > 500) {
             const newConnections = updateConnections(now)
@@ -139,19 +182,19 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
         connectionsRef.current.forEach(connection => {
             const start = sparklesRef.current[connection.from]
             const end = sparklesRef.current[connection.to]
-            
+
             const lifeProgress = Math.min((now - connection.startTime) / connection.life, 1)
             const fadeInOut = Math.sin(lifeProgress * Math.PI)
 
             const startPos = start.position.clone()
             const endPos = end.position.clone()
-            
+
             const waveTime = time * 0.001
             startPos.y += Math.sin(waveTime * start.speed + start.startTime) * 0.2 * fadeInOut
-            endPos.y += Math.sin(waveTime * end.speed + end.startTime) * 0.2 * fadeInOut
+            endPos.y += Math.sin(waveTime * end.speed + start.startTime) * 0.2 * fadeInOut
 
             const midpoint = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5)
-            const waveOffset = Math.sin(waveTime * connection.speed + connection.phase) * 
+            const waveOffset = Math.sin(waveTime * connection.speed + connection.phase) *
                              connection.amplitude * fadeInOut
             midpoint.y += waveOffset
 
@@ -172,7 +215,43 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
     return initialized ? (
         <line ref={lineRef}>
             <bufferGeometry />
-            <lineBasicMaterial color="#c6baaa" opacity={0.2} transparent={true} linewidth={1} />
+            <shaderMaterial
+                transparent
+                uniforms={{
+                    color: { value: new THREE.Color("#c6baaa") },
+                    opacity: { value: 0.2 },
+                    cameraPosition: { value: window.camera ? window.camera.position : new THREE.Vector3() }
+                }}
+                vertexShader={`
+                    varying vec3 vPosition;
+                    varying float vDistance;
+                    uniform vec3 cameraPosition;
+                    
+                    void main() {
+                        vPosition = position;
+                        vDistance = distance(position, cameraPosition);
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `}
+                fragmentShader={`
+                    varying vec3 vPosition;
+                    varying float vDistance;
+                    uniform vec3 color;
+                    uniform float opacity;
+                    
+                    void main() {
+                        // Calculate line thickness based on camera distance (40%-80%)
+                        float thickness = mix(0.4, 0.8, 1.0 - clamp(vDistance / 50.0, 0.0, 1.0));
+                        
+                        // Glossy effect
+                        vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
+                        float specular = pow(max(dot(normalize(vPosition), lightDir), 0.0), 32.0);
+                        vec3 finalColor = mix(color, vec3(1.0), specular * 0.5);
+                        
+                        gl_FragColor = vec4(finalColor, opacity * thickness);
+                    }
+                `}
+            />
         </line>
     ) : null
 }
@@ -206,7 +285,7 @@ export default function Experience() {
     const generateRandomPosition = () => {
         const currentPos = camera.position
         const moveType = Math.floor(Math.random() * 2)
-        
+
         switch(moveType) {
             case 0:
                 return [
@@ -228,25 +307,25 @@ export default function Experience() {
 
         const currentScrollY = window.scrollY
         const scrollDelta = currentScrollY - lastScrollY.current
-        
+
         if (Math.abs(scrollDelta) > 15) {
             const newPosition = generateRandomPosition()
             randomMovementRef.current.target = new THREE.Vector3(...newPosition)
             randomMovementRef.current.startTime = performance.now()
             randomMovementRef.current.isReturning = false
             setFadeOpacity(1)
-            
+
             if (randomMovementRef.current.timeoutId) {
                 clearTimeout(randomMovementRef.current.timeoutId)
             }
-            
+
             randomMovementRef.current.timeoutId = setTimeout(() => {
                 randomMovementRef.current.isReturning = true
                 randomMovementRef.current.startTime = performance.now()
                 randomMovementRef.current.target = new THREE.Vector3(-5, 20, 10)
             }, 3000)
         }
-        
+
         lastScrollY.current = currentScrollY
     }
 
@@ -282,92 +361,21 @@ export default function Experience() {
             const elapsed = performance.now() - randomMovementRef.current.startTime
             const progress = Math.min(elapsed / randomMovementRef.current.duration, 1)
             const easedProgress = easeWave(progress)
-            
+
             if (randomMovementRef.current.isReturning) {
                 const fadeProgress = elapsed / randomMovementRef.current.duration
                 setFadeOpacity(Math.max(0.2, 1 - fadeProgress))
             }
-            
+
             camera.position.lerp(randomMovementRef.current.target, 0.02 * (1 + easedProgress))
 
             const lookAtY = Math.sin(elapsed * 0.001) * 2
             camera.lookAt(0, lookAtY, 0)
         }
     })
-
-    return (
-        <>
-            {showOrbCont && <OrbitControls 
-                enableZoom={true} 
-                enableDamping={true}
-                minDistance={40}
-                maxDistance={60} 
-                maxPolarAngle={Math.PI/2}
-                maxAzimuthAngle={Math.PI/1}
-                minAzimuthAngle={-Math.PI/1}
-                makeDefault
-            />}
-            
-            <directionalLight
-                castShadow
-                position={[3, 4, 2]}
-                intensity={0.5 * fadeOpacity}
-                shadow-camera-near={0.5}
-                shadow-camera-far={50}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-            />
-            <directionalLight
-                ref={light2Ref}
-                castShadow
-                position={[-4, 5, 2]}
-                intensity={0.5 * fadeOpacity}
-                shadow-camera-near={0.5}
-                shadow-camera-far={50}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
             />
             <directionalLight
                 ref={light1Ref}
                 castShadow
                 position={[3, 4, -3]}
                 intensity={0.7 * fadeOpacity}
-                shadow-camera-near={0.5}
-                shadow-camera-far={50}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-            />
-            <directionalLight
-                castShadow
-                position={[0, 0, -3]}
-                intensity={0.2 * fadeOpacity}
-                shadow-camera-near={0.5}
-                shadow-camera-far={50}
-                shadow-camera-left={-10}
-                shadow-camera-right={10}
-                shadow-camera-top={10}
-                shadow-camera-bottom={-10}
-            />
-            <ambientLight intensity={0.4 * fadeOpacity} /> 
-
-            <BoxBaru/>
-
-            <Sparkles
-                size={20}
-                scale={[50,50,50]}
-                count={500}
-                position={[0,1,0]}
-                color={"#c6baaa"}
-                opacity={fadeOpacity}
-            />
-            
-            <SparkConnections sparkCount={500} maxDistance={2.16216} />
-        </>
-    )
-}
