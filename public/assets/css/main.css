@@ -454,12 +454,12 @@ h6 {
   }
 
   .navmenu .listing-dropdown ul ul {
-    background-color: rgba(33, 37, 41, 0.1);
+    background-color: #c6baaaff;
   }
 
   .navmenu .listing-dropdown>.dropdown-active {
     display: block;
-    background-color: rgba(33, 37, 41, 0.03);
+    background-color: #c6baaaff;
   }
 }
 
@@ -490,52 +490,54 @@ h6 {
 
 
 .login div.btn img{
-  width: 20px;
+  width: 5px;
 }
 .login div.btn{
   /* width: max-content;
   height: 50px; */
   /* background-color: #baddff; */
-  color: #ffffff;
+  color: #c6baaaff;
   border-radius: 10px;
-  box-shadow: 20px 0px 20px #ffbae139,
-      -20px -0px 20px #ffbae139, 
-      0px -20px 20px #ffbae139, 
-      -0px 20px 20px #ffbae139, 
+  box-shadow: 10px 0px 10px #ffbae139,
+      -10px -0px 10px #ffbae139, 
+      0px -10px 10px #ffbae139, 
+      -0px 10px 10px #ffbae139, 
       inset 6px 6px 6px #ffbae139, 
       inset -6px -6px 6px #ffbae139;
-  letter-spacing: 1.3px;
+  letter-spacing: 2px;
   border: none;
   padding: 10px 20px;
   position: absolute;
   bottom: 20vh;
-  border: 3px solid #ffbae1;
+  border: 0.01px solid #c6baaaff;
   z-index: 2;
 }
 
 .login div.btn:hover{
-  background-color: #372c34;
-  color: #7738be;
-  box-shadow: 5px 5px 5px #0c0a0c,
-      -5px -5px 5px #372c34;
+  opacity: .8;
+  background-color: #615b53;
+  color: #665e54;
+  box-shadow: 1px 1px 1px #c6baaaff,
+      -1px -1px 1px #c6baaaff;
 }
 .login div.btn:active{
-  background-color: #c6baaaff;
-  color: #c6baaaff;
-  box-shadow: 5px 5px 5px #0c0a0c,
-      -5px -5px 5px #372c34;
+  background-color: #8a837b;
+  color: #ece3d7;
+  box-shadow: 5px 5px 5px #c6baaaff,
+      -5px -5px 5px #c6baaaff;
 }
 .login div.btn div{
   color: #c6baaaff;
-  text-size-adjust: 120%;
+  text-size-adjust: 80%;
   text-rendering: auto;
-  -ms-text-kashida-space: var(--background-color);
+
   text
   /* font-family: "neonFont"; */
-  text-shadow: 20px 20px 20px #c6baaaff,
-      -20px -20px 20px #d6c9b7, 
-      20px -20px 20px #f1ede7, 
-      -20px 20px 20px #b6ab9d;
+  
+  text-shadow: 20px 20px 20px #c6baaa80,
+    -20px -20px 20px #c6baaa99, 
+    20px -20px 20px #c6baaa4d, 
+    -20px 20px 20px #c6baaa4d;
 }
 .login.after img{
   width: 30px;
@@ -548,11 +550,12 @@ h6 {
   font-size: 1rem;
   text-align: center;
   font-family: "Aldrich", serif;
-  width: 400px;
+  width: 350px;
   opacity: 1;
+  color: #c6baaaff;
 }
 .typing a{
-  color: #ffe9ff !important;
+  color: #c6baaaff !important;
   text-shadow: 1px 1px 12px #ffd7ffd4,
   1px 1px 12px #ffd7ffd4;
 }
@@ -585,28 +588,37 @@ h6 {
 }
 
 .banner .slider {
+  padding: 2 2 2 2;
   position: absolute;
-  width: 250px;
-  height: 250px;
+  width: 210px;
+  height: 210px;
   top: 30%;
   left: calc(50% - 100px);
   transform-style: preserve-3d;
   transform: perspective(1000px) rotateX(-10deg) rotateY(0deg);
   z-index: 2;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s ease;
   /* background-color: #b23f3f; */
 }
 .banner .slider .item {
-  position: absolute;
-  inset: 0 0 0 0;
+  border-image: round;
+  opacity: 0.8;
+  background-color: #c6baaa70;
+  width: 90;
+  height: 90;
+  padding: 6px;
+  position: fixed;
+  inset: -1 -1 -1 -1;
   transform: 
-      rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg))
+      rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 0.5deg))
       translateZ(550px);
   cursor: pointer;
 }
 .banner .slider .item img {
-  width: 80%;
-  height: 60%;
+  padding: 5px;
+  /* padding-block: 10px; */
+  width: 90%;
+  height: 90;
   object-fit: cover;
   -webkit-box-reflect: below -5px linear-gradient(transparent, transparent, rgba(0, 0, 0, 0.4));
 }
@@ -616,9 +628,9 @@ h6 {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 20px;
-  z-index: 3;
-  background-color: #b04e4e;
+  gap: 5px;
+  z-index: 2;
+  background-color: #c6baaaff;
 }
 .banner .controls button {
   font-family: Poppins, sans-serif;
@@ -765,6 +777,12 @@ h6 {
   .popup .description {
       font-size: 0.8rem;
   }
+  .michroma-regular {
+    font-family: "Michroma", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
 }
 
 

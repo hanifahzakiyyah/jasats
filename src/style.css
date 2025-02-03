@@ -10,7 +10,8 @@ body #root {
     width: 100%;
     height: 100vh;
     z-index: 1;
-    background: radial-gradient(circle, rgb(89, 63, 63) 0%, rgb(0, 0, 0) 70%);
+    opacity: ;
+    background: radial-gradient(circle, #000000 20%, #c6baaaff 95%);
 }
 
 body.afterLogin {

@@ -11,7 +11,7 @@ export default function Experience() {
     const light2Ref = useRef()
     const [showOrbCont, setShowOrbCont] = useState(true)
     const {camera} = useThree()
-    const [targetPosition, setTargetPosition] = useState([-5, 7, 20]);
+    const [targetPosition, setTargetPosition] = useState([-5, 20, 10]);
     const cameraRef = useRef();
     const [aturPosisi, setAturPosisi] = useState(false)
 
@@ -50,10 +50,13 @@ export default function Experience() {
         <>
             {showOrbCont && <OrbitControls 
                 makeDefault 
-                enableZoom={false} 
-                enableDamping 
+                enableZoom={true} 
+                enableDamping={true}
                 maxPolarAngle={Math.PI/2}
-                maxAzimuthAngle={Math.PI/2}
+                maxAzimuthAngle={Math.PI/1}
+                minAzimuthAngle={-Math.PI/1}
+                minDistance={10} // Adjust this value as needed
+                maxDistance={50} 
             />}
             
 
@@ -121,8 +124,8 @@ export default function Experience() {
 
             <Sparkles
                 size={20}
-                scale={[30,30,30]}
-                count={250}
+                scale={[50,50,50]}
+                count={500}
                 position={[0,1,0]}
                 color={"#c6baaa"}
             />
