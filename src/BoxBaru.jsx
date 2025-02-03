@@ -93,6 +93,16 @@ export default function BoxBaru(props) {
           action2.time = time 
           action2.play() 
         }
+
+
+
+
+
+
+
+
+
+        
     
     
         //opacity

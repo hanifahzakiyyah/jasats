@@ -14,8 +14,6 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
     const updateTimeRef = useRef(0)
     const touchPointRef = useRef(null)
     const touchRadiusRef = useRef(10)
-    const clickPointRef = useRef(null)
-    const attractionStrengthRef = useRef(0)
 
     useEffect(() => {
         const radius = 25
@@ -30,13 +28,11 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
                 r * Math.cos(phi)
             )
 
-            const originalPosition = position.clone()
             const distFromCenter = position.distanceTo(new THREE.Vector3(0, 1, 0))
             const centerWeight = 1 - (distFromCenter / (radius * 1.5))
 
             return {
                 position,
-                originalPosition,
                 startTime: Math.random() * Math.PI * 2,
                 speed: Math.random() * 0.5 + 0.5,
                 connectionCount: 0,
@@ -64,28 +60,14 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
             touchPointRef.current = null
         }
 
-        const handleClick = (event) => {
-            const canvas = event.target
-            const rect = canvas.getBoundingClientRect()
-            const x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-            const y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-
-            const vector = new THREE.Vector3(x, y, 0.5)
-            vector.unproject(window.camera)
-            clickPointRef.current = vector
-            attractionStrengthRef.current = 1
-        }
-
         window.addEventListener('pointermove', handlePointerMove)
         window.addEventListener('pointerup', handlePointerUp)
-        window.addEventListener('click', handleClick)
 
         setInitialized(true)
 
         return () => {
             window.removeEventListener('pointermove', handlePointerMove)
             window.removeEventListener('pointerup', handlePointerUp)
-            window.removeEventListener('click', handleClick)
         }
     }, [])
 
@@ -100,7 +82,7 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
                 if (i < j && otherSparkle.connectionCount < 3) {
                     const distance = sparkle.position.distanceTo(otherSparkle.position)
                     if (distance < maxDistance) {
-                        let connectionProb = baseConnectionProb *
+                        let connectionProb = baseConnectionProb * 
                             (sparkle.centerWeight + otherSparkle.centerWeight) / 2
 
                         if (touchPointRef.current) {
@@ -141,34 +123,9 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
 
     useFrame(({ clock }) => {
         if (!lineRef.current || !initialized) return
-
+        
         const time = clock.getElapsedTime() * 1000
         const now = time
-
-        // Update sparkle positions
-        if (clickPointRef.current && attractionStrengthRef.current > 0) {
-            sparklesRef.current.forEach(sparkle => {
-                // Calculate direction to click point
-                const toClick = clickPointRef.current.clone().sub(sparkle.position)
-                const dist = toClick.length()
-
-                // Normalize and scale by strength (slower movement)
-                toClick.normalize().multiplyScalar(0.005 * attractionStrengthRef.current)
-
-                // Limit movement based on distance to original position
-                const toOriginal = sparkle.originalPosition.clone().sub(sparkle.position)
-                const origDist = toOriginal.length()
-                if (origDist > 5) {
-                    toOriginal.normalize().multiplyScalar(0.01)
-                    sparkle.position.add(toOriginal)
-                } else {
-                    sparkle.position.add(toClick)
-                }
-            })
-
-            // Very slowly decrease attraction
-            attractionStrengthRef.current *= 0.998
-        }
 
         if (now - updateTimeRef.current > 500) {
             const newConnections = updateConnections(now)
@@ -182,19 +139,19 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 3.0888 }) => {
         connectionsRef.current.forEach(connection => {
             const start = sparklesRef.current[connection.from]
             const end = sparklesRef.current[connection.to]
-
+            
             const lifeProgress = Math.min((now - connection.startTime) / connection.life, 1)
             const fadeInOut = Math.sin(lifeProgress * Math.PI)
 
             const startPos = start.position.clone()
             const endPos = end.position.clone()
-
+            
             const waveTime = time * 0.001
             startPos.y += Math.sin(waveTime * start.speed + start.startTime) * 0.2 * fadeInOut
-            endPos.y += Math.sin(waveTime * end.speed + start.startTime) * 0.2 * fadeInOut
+            endPos.y += Math.sin(waveTime * end.speed + end.startTime) * 0.2 * fadeInOut
 
             const midpoint = new THREE.Vector3().lerpVectors(startPos, endPos, 0.5)
-            const waveOffset = Math.sin(waveTime * connection.speed + connection.phase) *
+            const waveOffset = Math.sin(waveTime * connection.speed + connection.phase) * 
                              connection.amplitude * fadeInOut
             midpoint.y += waveOffset
 
@@ -249,7 +206,7 @@ export default function Experience() {
     const generateRandomPosition = () => {
         const currentPos = camera.position
         const moveType = Math.floor(Math.random() * 2)
-
+        
         switch(moveType) {
             case 0:
                 return [
@@ -271,25 +228,25 @@ export default function Experience() {
 
         const currentScrollY = window.scrollY
         const scrollDelta = currentScrollY - lastScrollY.current
-
+        
         if (Math.abs(scrollDelta) > 15) {
             const newPosition = generateRandomPosition()
             randomMovementRef.current.target = new THREE.Vector3(...newPosition)
             randomMovementRef.current.startTime = performance.now()
             randomMovementRef.current.isReturning = false
             setFadeOpacity(1)
-
+            
             if (randomMovementRef.current.timeoutId) {
                 clearTimeout(randomMovementRef.current.timeoutId)
             }
-
+            
             randomMovementRef.current.timeoutId = setTimeout(() => {
                 randomMovementRef.current.isReturning = true
                 randomMovementRef.current.startTime = performance.now()
                 randomMovementRef.current.target = new THREE.Vector3(-5, 20, 10)
             }, 3000)
         }
-
+        
         lastScrollY.current = currentScrollY
     }
 
@@ -325,14 +282,14 @@ export default function Experience() {
             const elapsed = performance.now() - randomMovementRef.current.startTime
             const progress = Math.min(elapsed / randomMovementRef.current.duration, 1)
             const easedProgress = easeWave(progress)
-
+            
             if (randomMovementRef.current.isReturning) {
                 const fadeProgress = elapsed / randomMovementRef.current.duration
                 setFadeOpacity(Math.max(0.2, 1 - fadeProgress))
             }
-
+            
             camera.position.lerp(randomMovementRef.current.target, 0.02 * (1 + easedProgress))
-
+            
             const lookAtY = Math.sin(elapsed * 0.001) * 2
             camera.lookAt(0, lookAtY, 0)
         }
@@ -340,17 +297,17 @@ export default function Experience() {
 
     return (
         <>
-            {showOrbCont && <OrbitControls
-                enableZoom={true}
+            {showOrbCont && <OrbitControls 
+                enableZoom={true} 
                 enableDamping={true}
                 minDistance={40}
-                maxDistance={60}
+                maxDistance={60} 
                 maxPolarAngle={Math.PI/2}
                 maxAzimuthAngle={Math.PI/1}
                 minAzimuthAngle={-Math.PI/1}
                 makeDefault
             />}
-
+            
             <directionalLight
                 castShadow
                 position={[3, 4, 2]}
@@ -397,7 +354,7 @@ export default function Experience() {
                 shadow-camera-top={10}
                 shadow-camera-bottom={-10}
             />
-            <ambientLight intensity={0.4 * fadeOpacity} />
+            <ambientLight intensity={0.4 * fadeOpacity} /> 
 
             <BoxBaru/>
 
@@ -409,7 +366,7 @@ export default function Experience() {
                 color={"#c6baaa"}
                 opacity={fadeOpacity}
             />
-
+            
             <SparkConnections sparkCount={500} maxDistance={3.0888} />
         </>
     )
