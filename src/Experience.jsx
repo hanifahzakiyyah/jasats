@@ -172,7 +172,7 @@ const SparkConnections = ({ sparkCount = 500, maxDistance = 2.16216 }) => {
     return initialized ? (
         <line ref={lineRef}>
             <bufferGeometry />
-            <lineBasicMaterial color="#c6baaa" opacity={0.2} transparent={true} linewidth={1} />
+            <lineBasicMaterial color="#c6baaa" opacity={0.3} transparent={true} linewidth={1} />
         </line>
     ) : null
 }
@@ -300,7 +300,7 @@ export default function Experience() {
             {showOrbCont && <OrbitControls 
                 enableZoom={true} 
                 enableDamping={true}
-                minDistance={40}
+                minDistance={10}
                 maxDistance={60} 
                 maxPolarAngle={Math.PI/2}
                 maxAzimuthAngle={Math.PI/1}
